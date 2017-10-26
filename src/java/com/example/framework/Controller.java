@@ -31,20 +31,26 @@ public class Controller extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            String page = request.getRequestURL().toString().split(request.getContextPath())[1];
-            if(page.equals("/")) {
-                page = "/Index";
-            }
-            try {
-                Class c = Class.forName("com.example.controllers."+page.replaceAll("/", ""));
-                Object o = c.newInstance();
-                Method m = c.getDeclaredMethod("processRequest", HttpServletRequest.class, HttpServletResponse.class);
-                m.invoke(o, request,response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }           
-            
-            request.getRequestDispatcher("/WEB-INF"+page.toLowerCase()+".jsp").forward(request, response);
+        String page = "/";
+        try {
+             page = request.getRequestURL().toString().split(request.getContextPath())[1];
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        if(page.equals("/")) {
+            page = "/Index";
+        }
+        try {
+            Class c = Class.forName("com.example.controllers."+page.replaceAll("/", ""));
+            Object o = c.newInstance();
+            Method m = c.getDeclaredMethod("processRequest", HttpServletRequest.class, HttpServletResponse.class);
+            m.invoke(o, request,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }           
+
+        request.getRequestDispatcher("/WEB-INF"+page.toLowerCase()+".jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
